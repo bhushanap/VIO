@@ -1,0 +1,3 @@
+[submodule "autorally"]
+	path = include/autorally
+	url = https://github.com/bhushanap/autorally
