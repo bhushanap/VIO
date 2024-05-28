@@ -17,7 +17,7 @@ can have very high accuracy, especially with the rapid development of Global Pos
 
 However, GNSS based methods suffer from signal interference in noisy signal environments. Also, they suffer from signal blockage in indoor or other GNSS denied areas which makes them unreliable in such environments.
 
-![1_image_0.png](1_image_0.png)
+![Autorally Platform](images/1_image_0.png)
 
 Fig. 1. Autorally testbed Vision based navigation systems on the other hand approach this problem by using visual sensors like Light Detection and Ranging (LIDAR) and cameras. These systems process raw point cloud or image data to extract the robot's positional and rotational information with respect to its surroundings.
 
@@ -49,7 +49,7 @@ offers depth estimation, stereo VO reduces to a monocular VO when the distance t
 
 1) Stereo VO:
 
-![2_image_0.png](2_image_0.png)
+![VO](images/2_image_0.png)
 
 Much of development for stereo VO systems was driven by NASA's Mars exploration [6] [7] [8], focused on equipping planetary rovers to estimate 6-DoF motion in challenging terrains. Stereo cameras were often used with corner detection algorithms; Matthies et al [7] [8]
 built upon Moravec's [6] corner detection, using binocular systems and incorporating error covariance matrices for motion estimation, achieving improved trajectory recovery. Olson et al [9], [10] introduced an absolute orientation sensor and improved corner detection, significantly reducing accumulation errors in camera egomotion estimates. The inclusion of an absolute orientation sensor yielded a lower position error of for longer paths. Most of these earlier works used triangulation of tracked features across frames in 3d space to estimate motion. However, the term 'Visual Odometry' came to be coined much later in 2004 by Nister [11]. This paper detected features in frames independently and matched them later. This allowed them to address challenges like handling occlusions, outliers, and camera rotations, and incorporate robust statistical techniques like RANSAC
@@ -77,13 +77,13 @@ where each sensor individually estimates the state to being tightly coupled usin
 
 ## III. METHODOLOGY
 
-![3_image_1.png](3_image_1.png)
+![Hardware](images/3_image_1.png)
 
 ### A. Hardware Calibration
 
 In order to perform state estimation using hardware readings, the theoretical perfection of simulated models must account for the real-world imperfections inherent in physical hardware. This necessitates calibration, a critical process to rectify discrepancies between idealized assumptions and the actual hardware. For instance, camera models have reprojection and distortion errors, requiring adjustment of intrinsic parameters for accurate representation. Similarly, Inertial Measurement Units (IMUs) contend with noise, necessitating calibration to mitigate constant bias and additive white noise for gyroscope and accelerometer readings. Further, the functionality of both camera and IMU demands estimation of their relative transformations, Thus, hardware calibration is
 
-![3_image_0.png](3_image_0.png)
+![Camera Calibration](images/3_image_0.png)
 
 important to the ensure accuracy of the state estimation system.
 
@@ -112,7 +112,7 @@ focal lengths: αu, αv projection center: u0, v0
 $$K X=\lambda P$$
 $${\left[\begin{matrix}\alpha_{u}&0&u_{0}\\ 0&\alpha_{v}&v_{0}\\ 0&0&1\end{matrix}\right]}\,{\left[\begin{matrix}x\\ y\\ z\end{matrix}\right]}=\lambda\,{\left[\begin{matrix}u\\ v\\ 1\end{matrix}\right]}$$
 
-![4_image_0.png](4_image_0.png)
+![Checkerboard](images/4_image_0.png)
 
 The calibration step is done using a checkerboard or an Aruco markers as target. Capturing the target board from multiple angles gives us an estimate for what the actual projection matrix and distortion coefficients are.
 
@@ -147,7 +147,7 @@ The general workflow of a VIO system is as shown here.
 
 Common features between two frames are detected using feature detectors like ORB, SIFT, KLT. Then using an algorithm like RANSAC, outlier false matches are rejected. Based on the matched features, optical flow estimation from the frames is done. Relative poses between the two frames is computed from this data.
 
-![4_image_1.png](4_image_1.png)
+![Pose Estimation](images/4_image_1.png)
 
 Based on criteria like active library support, availability of ROS wrappers, and stereo camera compatibility, four different VIO packages were chosen to be tested. The plan involved benchmarking these selected packages to determine their performance and identify the most suitable one for the autorally system.
 
@@ -158,7 +158,7 @@ Based on criteria like active library support, availability of ROS wrappers, and
 
 These can be divided into two categories primarily based on how they perform the optimization step. This also affects their computation time significantly. These are Optimization-based and Filter-based approaches.
 
-![5_image_0.png](5_image_0.png)
+![VIO methods](images/5_image_0.png)
 
 1) **Filter based:** These methods employ a sequential approach to updating the estimate, first utilizing inertial information, followed by visual data, and then incorporating inertial measurements again. The Extended Kalman Filter is employed to iteratively refine the estimate based on the previous estimate and new measurements. **Rovioli**
 and **Xivo** followed this approach.
@@ -172,24 +172,24 @@ Orbslam3 and **OpenVins** followed this approach
 ### A. Hardware Calibration 
 
 #### 1) Camera Calibration:
-![5_image_3.png](5_image_3.png)
+![Undistorted images](images/5_image_3.png)
 
 Kalibr was vital for estimating the projection as well as distortion coefficients. Kalibr was also used again to compute relative transformations between the stereo cameras and IMU.
 
 For the camera intrinsics, the re-projection error with the estimated parameters was within 1 pixel. The reprojection errors are as shown here.
-![5_image_4.png](5_image_4.png)
+![Reprojection errors](images/5_image_4.png)
 
 #### 2) Imu Calibration:
 
 Allan Variance ROS gave a reasonable estimate for IMU intrinsics. By plotting the IMU noise data on a logarithmic scale, noise parameters can be estimated using Allan Variance method. The graph for gyro and accelerometer was as follows:
 
-![5_image_1.png](5_image_1.png)
+![IMU errors](images/5_image_1.png)
 
 The values estimated were off from the values in the manufacturer data-sheet. Thus, it was worthwhile to perform the calibration to get more accurate estimate of the white noise.
 
 ### B. Preliminary Results
 
-![5_image_2.png](5_image_2.png)
+![Preliminary results](images/5_image_2.png)
 
 The initial results were tested on two bag files of track run to get a visual estimate of how well the estimates were out of the box for the four packages.
 
@@ -199,7 +199,7 @@ The best results out of the 4 packages were from Rovioli and Openvins. They mana
 
 The two main probable reasons behind bad estimates could be summarized as follows:
 
-![6_image_0.png](6_image_0.png)
+![Feature tracking](images/6_image_0.png)
 1) **Lighting variations:** Many of these packages were variant to environment lighting conditions and thus needed some kind of pre-filtering in order to track the features well. The variation in exposure caused certain areas of the image to clip (example: when the camera was directly facing the sun causing a sudden change in exposure) where the feature trackers were not able to detect any features.
 
 2) **Noisy Compressed Data** The vehicle movement was extremely erratic. This coupled with image compression led to all information being lost from the grass texture underneath. These points were still being tracked which could have been giving bad results. On probing further, it was found that the points on the chassis of the vehicle were being tracked. This was bound to give a wrong estimate.
@@ -208,7 +208,7 @@ The two main probable reasons behind bad estimates could be summarized as follow
 
 1) Image Preprocessing This step involved tweaking image exposure, contrast before passing the images into the estimator. Some of these packages had preprocessing built in which made it a lot easier. Brightness, Contrast, Sharpness, applying grayscale filters were some of preprocessing techniques used. These did not improve the results much. Histogram equalization methods like CLAHE were also used which did show noticeable improvement in result consistency.
 
-![6_image_3.png](6_image_3.png)
+![Image masks](images/6_image_3.png)
 
 2) Masking Vehicle Chassis As some features on the vehicle body were being tracked, an alpha mask was used to exclude such parts from the feature tracker. It was expected that this would make the tracking significantly better. On the contrary, this made the results even worse. As a result, it was decided not to use image masks.
 
@@ -220,9 +220,9 @@ After a lot of parameter tuning, the results were resembling the ground truth tr
 
 Fig. 14. OpenVins Estimate 1
 
-![6_image_1.png](6_image_1.png)
+![OpenVins Estimate A](images/6_image_1.png)
 
-![6_image_2.png](6_image_2.png)
+![OpenVins Estimate B](images/6_image_2.png)
 
 The best results were obtained with OpenVins. The rest of the packages failed to give decent results. Even with OpenVins, the errors kept on accumulating and eventually after a long time the estimates starts to diverge. Although this is an inherent flaw with VIO based estimation, the error is considerably high that the estimation cannot be used reliably in real time.
 
@@ -235,19 +235,19 @@ tracker. Infact, the results shown here are with KLT tracker. This is likely rel
 
 ## E. Race-Car Results
 
-![7_image_0.png](7_image_0.png)
+![Racecar Platform](images/7_image_0.png)
 
 In order to make the problem slightly easier, we decided to switch to the MIT race-car platform which could be used indoors. Tracking features indoors was relatively easier due to consistent lighting conditions and easy to detect high contrast features present in indoor environments.
 
 
-![7_image_3.png](7_image_3.png)
-![7_image_2.png](7_image_2.png)
+![Indoor environment](images/7_image_3.png)
+![Indoor feature tracking](images/7_image_2.png)
 
 The race-car platform had similar hardware, a stereo camera pair and an IMU which made it easier to repeat the familiar procedure on the newer hardware. The only major caveat was this was based on the ROS2 Eloquent platform so finding compatible VIO frameworks was a challenge.
 
 Hardware Calibration was done similarly as previously mentioned for Autorally. Luckily, OpenVins which was already giving decent estimates had a ROS2 wrapper. This made for an easy transition to the race-car platform. Some initial bag files were recorded in the hallway which showed promising results. Although, it should be noted that there was no way to verify these results with the ground truth as GPS connectivity is poor indoors. F. IFL Testing
 
-![7_image_1.png](7_image_1.png)
+![Final results](images/7_image_1.png)
 
 To validate the robustness of these results, subsequent testing was done in Georgia Tech's Indoor Flight Laboratory
 (IFL). It is an open indoor space with its own independent Vicon motion-capture system altogether totaling 56 cameras.
