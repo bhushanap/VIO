@@ -1,3 +1,6 @@
 [submodule "autorally"]
-	path = include/autorally
+	path = autorally
 	url = https://github.com/bhushanap/autorally
+[submodule "openvins"]
+	path = openvins
+	url = https://github.com/bhushanap/openvins
