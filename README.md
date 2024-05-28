@@ -10,6 +10,9 @@ This project aims to enhance localization for autorally and racecar testbed envi
 📖 Introduction
 
 The rapid advancements in autonomous vehicle technology promise significant impacts across various industries. Achieving fully autonomous driving requires robust solutions to numerous challenges, including reliable localization, essential for autonomous navigation.
+
+![image](https://github.com/bhushanap/VIO/assets/83635464/6887c859-5091-403c-a9d7-ad1ac6b4078f)
+
 ## 🎯 Project Goals
 
     Develop a VIO system integrating visual and inertial data.
