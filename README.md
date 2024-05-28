@@ -1,4 +1,7 @@
 # 🚗 Visual Inertial Odometry Based State Estimation For Autorally / Racecar
+
+Detailed Report can be found [here](Report)
+
 ## 🌟 Overview
 
 ![Autorally Platform](Report/images/1_image_0.png)
